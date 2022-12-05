@@ -1,16 +1,11 @@
 import './bootstrap';
 
 import { createApp } from 'vue';
-import HtmlSnippet from './components/HtmlSnippet.vue';
-import LinkComponent from './components/LinkComponent.vue';
-import PdfDownload from './components/PdfDownload.vue';
+import store from "./store";
+import App from './App.vue';
 
 createApp({
     components: {
-        HtmlSnippet,
-        LinkComponent,
-        PdfDownload,
-    }
-}).mount('#app');
-
-// Register Vue Components
+        App,
+    },
+}).use(store).mount('#app');
