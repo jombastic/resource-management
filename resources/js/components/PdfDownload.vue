@@ -1,7 +1,7 @@
 <template>
     <div class="mb-3">
-        <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        <label for="file" class="form-label">Upload a pdf file</label>
+        <input class="form-control" type="file" id="file">
     </div>
 </template>
 

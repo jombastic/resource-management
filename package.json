@@ -17,5 +17,8 @@
         "postcss-custom-properties": "^12.1.11",
         "vue": "^3.2.45",
         "vue-loader": "^16.8.3"
+    },
+    "dependencies": {
+        "vue3-editor": "^0.1.1"
     }
 }
