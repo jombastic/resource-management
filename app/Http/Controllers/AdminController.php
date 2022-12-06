@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Resource;
+use App\Repositories\ResourceRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
+    public function __construct(ResourceRepository $resourceRepository) 
+    {
+        $this->resourceRepository = $resourceRepository;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -45,10 +51,15 @@ class AdminController extends Controller
             'htmlSnippet' => ($request->input('resourceType') == 'HTML Snippet' ? 'required' : ''),
             'pdfFile' => ($request->input('resourceType') == 'PDF Download' ? 'required|file|mimetypes:application/pdf' : ''),
             'link' => ($request->input('resourceType') == 'Link' ? 'required|url' : ''),
-            'openLinkInNewTab' => ($request->input('resourceType') == 'Link' ? Rule::in(['true', 'false']) : ''),
         ];
-        $validator = Validator::make($request->all(), $rules);
+        $data = $request->all();
+        $validator = Validator::make($data, $rules);
         $validator->validate();
+
+        $file = $request->file('pdfFile');
+        $data['pdfFile'] = $file->storeAs('public', $file->getClientOriginalName());
+
+        $this->resourceRepository->storeResources($data);
 
         return response()->json(array('success' => true), 200);
     }

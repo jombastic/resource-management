@@ -18439,7 +18439,7 @@ var state = {
     pdfFile: '',
     fileName: '',
     link: '',
-    openLinkInNewTab: true
+    openLinkInNewTab: ''
   }
 };
 var mutations = {
@@ -18478,7 +18478,9 @@ var actions = {
         value = _Object$entries$_i[1];
       formData.append(key, value);
     }
-    return axios.post('/admin/store', formData).then(function (response) {})["catch"](function (error) {
+    return axios.post('/admin/store', formData).then(function (response) {
+      window.location.replace('/');
+    })["catch"](function (error) {
       throw error;
     });
   }

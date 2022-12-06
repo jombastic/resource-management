@@ -9,7 +9,7 @@ const state = {
         pdfFile: '',
         fileName: '',
         link: '',
-        openLinkInNewTab: true
+        openLinkInNewTab: ''
     }
 };
 
@@ -48,6 +48,7 @@ const actions = {
 
         return axios.post('/admin/store', formData)
             .then((response) => {
+                window.location.replace('/');
             })
             .catch((error) => {
                 throw error

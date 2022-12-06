@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('resources', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('filename');
-            $table->string('link');
-            $table->string('snippet_description');
-            $table->tinyInteger('open_in_new_tab');
-            $table->longText('html_snippet');
+            $table->string('pdfFile')->nullable();
+            $table->string('link')->nullable();
+            $table->string('snippetDescription')->nullable();
+            $table->tinyInteger('openLinkInNewTab')->nullable();
+            $table->longText('htmlSnippet')->nullable();
             $table->timestamps();
         });
     }
