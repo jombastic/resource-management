@@ -6,7 +6,7 @@ const state = {
         resourceType: '',
         snippetDescription: '',
         htmlSnippet: '',
-        pdfFIle: '',
+        pdfFile: '',
         fileName: '',
         link: '',
         openLinkInNewTab: true
@@ -28,7 +28,7 @@ const mutations = {
     },
     UPDATE_PDF_FILE(state, payload) {
         if (!payload) return;
-        state.fields.pdfFIle = payload;
+        state.fields.pdfFile = payload;
         state.fields.fileName = payload.name;
     },
     UPDATE_LINK(state, payload) {
@@ -40,7 +40,19 @@ const mutations = {
 };
 
 const actions = {
+    saveResources({ state, commit }) {
+        const formData = new FormData();
+        for (const [key, value] of Object.entries(state.fields)) {
+            formData.append(key, value);
+        }
 
+        return axios.post('/admin/store', formData)
+            .then((response) => {
+            })
+            .catch((error) => {
+                throw error
+            })
+    },
 };
 
 const getters = {
@@ -48,7 +60,7 @@ const getters = {
     resourceType: state => state.fields.resourceType,
     snippetDescription: state => state.fields.snippetDescription,
     htmlSnippet: state => state.fields.htmlSnippet,
-    pdfFIle: state => state.fields.pdfFIle,
+    pdfFile: state => state.fields.pdfFile,
     fileName: state => state.fields.fileName,
     link: state => state.fields.link,
     openLinkInNewTab: state => state.fields.openLinkInNewTab,

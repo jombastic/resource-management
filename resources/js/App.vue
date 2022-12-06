@@ -5,7 +5,7 @@
                 <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
                 <input :value="title" @input="onInputChange" type="text" class="form-control" id="title" name="TITLE"
                     placeholder="Enter title here">
-                    <span class="text-danger">{{ fieldErrors.title }}</span>
+                <span class="text-danger">{{ fieldErrors.title }}</span>
             </div>
             <div class="mb-5">
                 <label for="resource-type" class="form-label">Resource Type <span class="text-danger">*</span></label>
@@ -76,9 +76,9 @@ export default {
 
             if (fields.resourceType === 'PDF Download') {
                 if (!fields.fileName) errors.fileName = 'File required';
+
                 // Allowing file type
                 var allowedExtensions = /(\.pdf)$/i;
-
                 if (fields.fileName && !allowedExtensions.exec(fields.fileName)) errors.fileName = 'Invalid file type';
             }
 
@@ -103,6 +103,22 @@ export default {
             this.fieldErrors = this.validateForm(this.$store.state.fields);
 
             if (Object.keys(this.fieldErrors).length) return;
+
+            this.saveStatus = 'SAVING';
+            this.$store.dispatch('saveResources', this.$store.state.fields)
+                .then(() => {
+                    this.saveStatus = 'SUCCESS';
+                    console.log('sho')
+                })
+                .catch((err) => {
+                    this.saveStatus = 'ERROR';
+                    let fieldErrors = {};
+                    
+                    for (const [key, value] of Object.entries(err.response.data.errors)) {
+                        fieldErrors[key] = value[0];
+                    }
+                    this.fieldErrors = fieldErrors;
+                });
         }
     }
 }

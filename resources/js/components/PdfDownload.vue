@@ -20,7 +20,7 @@ export default {
     props: ['fieldErrors'],
 
     computed: {
-        ...mapGetters(['pdfFIle', 'fileName'])
+        ...mapGetters(['pdfFile', 'fileName'])
     }
 }
 </script>

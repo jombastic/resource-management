@@ -17845,6 +17845,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_LinkComponent_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/LinkComponent.vue */ "./resources/js/components/LinkComponent.vue");
 /* harmony import */ var _components_PdfDownload_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/PdfDownload.vue */ "./resources/js/components/PdfDownload.vue");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0) { ; } } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -17887,6 +17893,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       }
       if (fields.resourceType === 'PDF Download') {
         if (!fields.fileName) errors.fileName = 'File required';
+
         // Allowing file type
         var allowedExtensions = /(\.pdf)$/i;
         if (fields.fileName && !allowedExtensions.exec(fields.fileName)) errors.fileName = 'Invalid file type';
@@ -17906,8 +17913,24 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       }
     },
     submitForm: function submitForm(evt) {
+      var _this = this;
       this.fieldErrors = this.validateForm(this.$store.state.fields);
       if (Object.keys(this.fieldErrors).length) return;
+      this.saveStatus = 'SAVING';
+      this.$store.dispatch('saveResources', this.$store.state.fields).then(function () {
+        _this.saveStatus = 'SUCCESS';
+        console.log('sho');
+      })["catch"](function (err) {
+        _this.saveStatus = 'ERROR';
+        var fieldErrors = {};
+        for (var _i = 0, _Object$entries = Object.entries(err.response.data.errors); _i < _Object$entries.length; _i++) {
+          var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
+            key = _Object$entries$_i[0],
+            value = _Object$entries$_i[1];
+          fieldErrors[key] = value[0];
+        }
+        _this.fieldErrors = fieldErrors;
+      });
     }
   }
 });
@@ -17969,7 +17992,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
   name: 'PdfDownload',
   mixins: [_mixins_updateInput_js__WEBPACK_IMPORTED_MODULE_0__["default"]],
   props: ['fieldErrors'],
-  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapGetters)(['pdfFIle', 'fileName']))
+  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapGetters)(['pdfFile', 'fileName']))
 });
 
 /***/ }),
@@ -18168,6 +18191,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_3), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.fieldErrors.link), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "class": "form-check-input",
     type: "checkbox",
+    value: "1",
     checked: _ctx.openLinkInNewTab,
     onChange: _cache[1] || (_cache[1] = function () {
       return _ctx.onInputChange && _ctx.onInputChange.apply(_ctx, arguments);
@@ -18399,6 +18423,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0) { ; } } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var state = {
   fields: {
@@ -18406,7 +18436,7 @@ var state = {
     resourceType: '',
     snippetDescription: '',
     htmlSnippet: '',
-    pdfFIle: '',
+    pdfFile: '',
     fileName: '',
     link: '',
     openLinkInNewTab: true
@@ -18427,7 +18457,7 @@ var mutations = {
   },
   UPDATE_PDF_FILE: function UPDATE_PDF_FILE(state, payload) {
     if (!payload) return;
-    state.fields.pdfFIle = payload;
+    state.fields.pdfFile = payload;
     state.fields.fileName = payload.name;
   },
   UPDATE_LINK: function UPDATE_LINK(state, payload) {
@@ -18437,7 +18467,22 @@ var mutations = {
     state.fields.openLinkInNewTab = payload;
   }
 };
-var actions = {};
+var actions = {
+  saveResources: function saveResources(_ref) {
+    var state = _ref.state,
+      commit = _ref.commit;
+    var formData = new FormData();
+    for (var _i = 0, _Object$entries = Object.entries(state.fields); _i < _Object$entries.length; _i++) {
+      var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
+        key = _Object$entries$_i[0],
+        value = _Object$entries$_i[1];
+      formData.append(key, value);
+    }
+    return axios.post('/admin/store', formData).then(function (response) {})["catch"](function (error) {
+      throw error;
+    });
+  }
+};
 var getters = {
   title: function title(state) {
     return state.fields.title;
@@ -18451,8 +18496,8 @@ var getters = {
   htmlSnippet: function htmlSnippet(state) {
     return state.fields.htmlSnippet;
   },
-  pdfFIle: function pdfFIle(state) {
-    return state.fields.pdfFIle;
+  pdfFile: function pdfFile(state) {
+    return state.fields.pdfFile;
   },
   fileName: function fileName(state) {
     return state.fields.fileName;
@@ -57017,7 +57062,7 @@ const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
       }
     }
 
-    if (_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].isFormData(requestData) && _platform_index_js__WEBPACK_IMPORTED_MODULE_3__["default"].isStandardBrowserEnv) {
+    if (_utils_js__WEBPACK_IMPORTED_MODULE_2__["default"].isFormData(requestData) && (_platform_index_js__WEBPACK_IMPORTED_MODULE_3__["default"].isStandardBrowserEnv || _platform_index_js__WEBPACK_IMPORTED_MODULE_3__["default"].isStandardBrowserWebWorkerEnv)) {
       requestHeaders.setContentType(false); // Let the browser set it
     }
 
@@ -57045,7 +57090,7 @@ const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
       const responseHeaders = _core_AxiosHeaders_js__WEBPACK_IMPORTED_MODULE_1__["default"].from(
         'getAllResponseHeaders' in request && request.getAllResponseHeaders()
       );
-      const responseData = !responseType || responseType === 'text' ||  responseType === 'json' ?
+      const responseData = !responseType || responseType === 'text' || responseType === 'json' ?
         request.responseText : request.response;
       const response = {
         data: responseData,
@@ -57304,6 +57349,9 @@ axios.spread = _helpers_spread_js__WEBPACK_IMPORTED_MODULE_11__["default"];
 
 // Expose isAxiosError
 axios.isAxiosError = _helpers_isAxiosError_js__WEBPACK_IMPORTED_MODULE_12__["default"];
+
+// Expose mergeConfig
+axios.mergeConfig = _core_mergeConfig_js__WEBPACK_IMPORTED_MODULE_3__["default"];
 
 axios.AxiosHeaders = _core_AxiosHeaders_js__WEBPACK_IMPORTED_MODULE_13__["default"];
 
@@ -58307,7 +58355,7 @@ function throwIfCancellationRequested(config) {
   }
 
   if (config.signal && config.signal.aborted) {
-    throw new _cancel_CanceledError_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
+    throw new _cancel_CanceledError_js__WEBPACK_IMPORTED_MODULE_0__["default"](null, config);
   }
 }
 
@@ -58820,7 +58868,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "VERSION": () => (/* binding */ VERSION)
 /* harmony export */ });
-const VERSION = "1.2.0";
+const VERSION = "1.2.1";
 
 /***/ }),
 
@@ -59521,7 +59569,7 @@ function speedometer(samplesCount, min) {
 
     const passed = startedAt && now - startedAt;
 
-    return  passed ? Math.round(bytesCount * 1000 / passed) : undefined;
+    return passed ? Math.round(bytesCount * 1000 / passed) : undefined;
   };
 }
 
@@ -60049,6 +60097,24 @@ const isStandardBrowserEnv = (() => {
   return typeof window !== 'undefined' && typeof document !== 'undefined';
 })();
 
+/**
+ * Determine if we're running in a standard browser webWorker environment
+ *
+ * Although the `isStandardBrowserEnv` method indicates that
+ * `allows axios to run in a web worker`, the WebWorker will still be
+ * filtered out due to its judgment standard
+ * `typeof window !== 'undefined' && typeof document !== 'undefined'`.
+ * This leads to a problem when axios post `FormData` in webWorker
+ */
+ const isStandardBrowserWebWorkerEnv = (() => {
+  return (
+    typeof WorkerGlobalScope !== 'undefined' &&
+    self instanceof WorkerGlobalScope &&
+    typeof self.importScripts === 'function'
+  );
+})();
+
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   isBrowser: true,
   classes: {
@@ -60057,6 +60123,7 @@ const isStandardBrowserEnv = (() => {
     Blob
   },
   isStandardBrowserEnv,
+  isStandardBrowserWebWorkerEnv,
   protocols: ['http', 'https', 'file', 'blob', 'url', 'data']
 });
 

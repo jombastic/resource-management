@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Resource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -35,7 +37,20 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Setup the validator
+        $rules = [
+            'title' => 'required',
+            'resourceType' => ['required', Rule::in(['HTML Snippet', 'PDF Download', 'Link'])],
+            'snippetDescription' => ($request->input('resourceType') == 'HTML Snippet' ? 'required' : ''),
+            'htmlSnippet' => ($request->input('resourceType') == 'HTML Snippet' ? 'required' : ''),
+            'pdfFile' => ($request->input('resourceType') == 'PDF Download' ? 'required|file|mimetypes:application/pdf' : ''),
+            'link' => ($request->input('resourceType') == 'Link' ? 'required|url' : ''),
+            'openLinkInNewTab' => ($request->input('resourceType') == 'Link' ? Rule::in(['true', 'false']) : ''),
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        $validator->validate();
+
+        return response()->json(array('success' => true), 200);
     }
 
 

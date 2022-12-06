@@ -6,7 +6,7 @@
         <span class="text-danger">{{ fieldErrors.link }}</span>
     </div>
     <div class="form-check">
-        <input class="form-check-input" type="checkbox" :checked="openLinkInNewTab" @change="onInputChange"
+        <input class="form-check-input" type="checkbox" value="1" :checked="openLinkInNewTab" @change="onInputChange"
             name="NEW_TAB" id="new-tab">
         <label class="form-check-label" for="new-tab">
             Open the link in a new tab</label>
