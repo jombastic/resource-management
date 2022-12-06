@@ -1,13 +1,15 @@
 <template>
     <div class="mb-3">
-        <label for="link" class="form-label">Link</label>
-        <input @input="onInputChange" type="text" name="LINK" class="form-control" id="link" placeholder="Enter a link here">
+        <label for="link" class="form-label">Link <span class="text-danger">*</span></label>
+        <input @input="onInputChange" :value="link" type="text" name="LINK" class="form-control" id="link"
+            placeholder="Enter a link here">
+        <span class="text-danger">{{ fieldErrors.link }}</span>
     </div>
     <div class="form-check">
-        <input class="form-check-input" type="checkbox" :checked="openLinkInNewTab" @change="onInputChange" name="NEW_TAB" id="new-tab">
+        <input class="form-check-input" type="checkbox" :checked="openLinkInNewTab" @change="onInputChange"
+            name="NEW_TAB" id="new-tab">
         <label class="form-check-label" for="new-tab">
-            Open the link in a new tab 
-        </label>
+            Open the link in a new tab</label>
     </div>
 </template>
 
@@ -20,8 +22,10 @@ export default {
 
     mixins: [UpdateInput],
 
+    props: ['fieldErrors'],
+
     computed: {
-        ...mapGetters(['openLinkInNewTab'])
+        ...mapGetters(['link', 'openLinkInNewTab'])
     }
 }
 </script>

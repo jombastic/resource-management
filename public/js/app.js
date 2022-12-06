@@ -17863,7 +17863,53 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     PdfDownload: _components_PdfDownload_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   mixins: [_mixins_updateInput_js__WEBPACK_IMPORTED_MODULE_0__["default"]],
-  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapGetters)(['title', 'resourceType']))
+  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapGetters)(['title', 'resourceType'])),
+  data: function data() {
+    return {
+      fieldErrors: {
+        title: undefined,
+        resourceType: undefined,
+        snippetDescription: undefined,
+        htmlSnippet: undefined,
+        pdfFIle: undefined,
+        link: undefined
+      }
+    };
+  },
+  methods: {
+    validateForm: function validateForm(fields) {
+      var errors = {};
+      if (!fields.title) errors.title = 'Title required';
+      if (!fields.resourceType) errors.resourceType = 'Resource type required';
+      if (fields.resourceType === 'HTML Snippet') {
+        if (!fields.snippetDescription) errors.snippetDescription = 'Snippet description required';
+        if (!fields.htmlSnippet) errors.htmlSnippet = 'Html snippet required';
+      }
+      if (fields.resourceType === 'PDF Download') {
+        if (!fields.fileName) errors.fileName = 'File required';
+        // Allowing file type
+        var allowedExtensions = /(\.pdf)$/i;
+        if (fields.fileName && !allowedExtensions.exec(fields.fileName)) errors.fileName = 'Invalid file type';
+      }
+      if (fields.resourceType === 'Link') {
+        if (!fields.link) errors.link = 'Link required';
+        if (fields.link && !this.isValidUrl(fields.link)) errors.link = 'Invalid link';
+      }
+      return errors;
+    },
+    isValidUrl: function isValidUrl(string) {
+      try {
+        new URL(string);
+        return true;
+      } catch (err) {
+        return false;
+      }
+    },
+    submitForm: function submitForm(evt) {
+      this.fieldErrors = this.validateForm(this.$store.state.fields);
+      if (Object.keys(this.fieldErrors).length) return;
+    }
+  }
 });
 
 /***/ }),
@@ -17892,7 +17938,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'LinkComponent',
   mixins: [_mixins_updateInput_js__WEBPACK_IMPORTED_MODULE_0__["default"]],
-  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapGetters)(['openLinkInNewTab']))
+  props: ['fieldErrors'],
+  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapGetters)(['link', 'openLinkInNewTab']))
 });
 
 /***/ }),
@@ -17921,7 +17968,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'PdfDownload',
   mixins: [_mixins_updateInput_js__WEBPACK_IMPORTED_MODULE_0__["default"]],
-  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapGetters)(['pdfFIle']))
+  props: ['fieldErrors'],
+  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapGetters)(['pdfFIle', 'fileName']))
 });
 
 /***/ }),
@@ -17956,6 +18004,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     VueEditor: vue3_editor__WEBPACK_IMPORTED_MODULE_0__.VueEditor
   },
   mixins: [_mixins_updateInput_js__WEBPACK_IMPORTED_MODULE_1__["default"]],
+  props: ['fieldErrors'],
   computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_2__.mapGetters)(['snippetDescription'])), {}, {
     htmlSnippet: {
       get: function get() {
@@ -17984,43 +18033,43 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  action: "",
-  "class": "row"
-};
-var _hoisted_2 = {
   "class": "col-6 mb-3"
 };
-var _hoisted_3 = {
+var _hoisted_2 = {
   "class": "mb-3"
 };
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "title",
   "class": "form-label"
-}, "Title", -1 /* HOISTED */);
-var _hoisted_5 = ["value"];
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Title "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "text-danger"
+}, "*")], -1 /* HOISTED */);
+var _hoisted_4 = ["value"];
+var _hoisted_5 = {
+  "class": "text-danger"
+};
 var _hoisted_6 = {
   "class": "mb-5"
 };
 var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "resource-type",
   "class": "form-label"
-}, "Resource Type", -1 /* HOISTED */);
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Resource Type "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "text-danger"
+}, "*")], -1 /* HOISTED */);
 var _hoisted_8 = ["value"];
 var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
   disabled: "",
   value: ""
 }, "Select a resource type", -1 /* HOISTED */);
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
-  value: "1"
-}, "PDF Download", -1 /* HOISTED */);
-var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
-  value: "2"
-}, "HTML Snippet", -1 /* HOISTED */);
-var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
-  value: "3"
-}, "Link", -1 /* HOISTED */);
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", null, "PDF Download", -1 /* HOISTED */);
+var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", null, "HTML Snippet", -1 /* HOISTED */);
+var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", null, "Link", -1 /* HOISTED */);
 var _hoisted_13 = [_hoisted_9, _hoisted_10, _hoisted_11, _hoisted_12];
-var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_14 = {
+  "class": "text-danger"
+};
+var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "col-12"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
   "class": "btn btn-primary",
@@ -18031,7 +18080,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_SnippetComponent = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("SnippetComponent");
   var _component_PdfDownload = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("PdfDownload");
   var _component_LinkComponent = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("LinkComponent");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("form", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("form", {
+    onSubmit: _cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+      return $options.submitForm && $options.submitForm.apply($options, arguments);
+    }, ["prevent"])),
+    action: "",
+    "class": "row"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     value: _ctx.title,
     onInput: _cache[0] || (_cache[0] = function () {
       return _ctx.onInputChange && _ctx.onInputChange.apply(_ctx, arguments);
@@ -18041,7 +18096,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     id: "title",
     name: "TITLE",
     placeholder: "Enter title here"
-  }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_5)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [_hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+  }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_4), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.fieldErrors.title), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [_hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
     onChange: _cache[1] || (_cache[1] = function () {
       return _ctx.onInputChange && _ctx.onInputChange.apply(_ctx, arguments);
     }),
@@ -18050,7 +18105,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     id: "resource-type",
     "class": "form-select",
     "aria-label": "Default select example"
-  }, _hoisted_13, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_8)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_SnippetComponent), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PdfDownload), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_LinkComponent)]), _hoisted_14]);
+  }, _hoisted_13, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_8), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.fieldErrors.resourceType), 1 /* TEXT */)]), _ctx.resourceType === 'HTML Snippet' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_SnippetComponent, {
+    key: 0,
+    fieldErrors: $data.fieldErrors
+  }, null, 8 /* PROPS */, ["fieldErrors"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.resourceType === 'PDF Download' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_PdfDownload, {
+    key: 1,
+    fieldErrors: $data.fieldErrors
+  }, null, 8 /* PROPS */, ["fieldErrors"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.resourceType === 'Link' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_LinkComponent, {
+    key: 2,
+    fieldErrors: $data.fieldErrors
+  }, null, 8 /* PROPS */, ["fieldErrors"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_15], 32 /* HYDRATE_EVENTS */);
 }
 
 /***/ }),
@@ -18074,27 +18138,34 @@ var _hoisted_1 = {
 var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "link",
   "class": "form-label"
-}, "Link", -1 /* HOISTED */);
-var _hoisted_3 = {
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Link "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "text-danger"
+}, "*")], -1 /* HOISTED */);
+var _hoisted_3 = ["value"];
+var _hoisted_4 = {
+  "class": "text-danger"
+};
+var _hoisted_5 = {
   "class": "form-check"
 };
-var _hoisted_4 = ["checked"];
-var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_6 = ["checked"];
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "form-check-label",
   "for": "new-tab"
-}, " Open the link in a new tab ", -1 /* HOISTED */);
+}, " Open the link in a new tab", -1 /* HOISTED */);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     onInput: _cache[0] || (_cache[0] = function () {
       return _ctx.onInputChange && _ctx.onInputChange.apply(_ctx, arguments);
     }),
+    value: _ctx.link,
     type: "text",
     name: "LINK",
     "class": "form-control",
     id: "link",
     placeholder: "Enter a link here"
-  }, null, 32 /* HYDRATE_EVENTS */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_3), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.fieldErrors.link), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "class": "form-check-input",
     type: "checkbox",
     checked: _ctx.openLinkInNewTab,
@@ -18103,7 +18174,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     name: "NEW_TAB",
     id: "new-tab"
-  }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_4), _hoisted_5])], 64 /* STABLE_FRAGMENT */);
+  }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_6), _hoisted_7])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
@@ -18126,20 +18197,34 @@ var _hoisted_1 = {
 };
 var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "file",
-  "class": "form-label"
-}, "Upload a pdf file", -1 /* HOISTED */);
-var _hoisted_3 = ["value"];
+  "class": "form-label d-block"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Upload a pdf file "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "text-danger"
+}, "*")], -1 /* HOISTED */);
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  type: "button",
+  "class": "btn btn-dark",
+  onclick: "document.getElementById('file').click();"
+}, "Browse", -1 /* HOISTED */);
+var _hoisted_4 = {
+  "class": "ms-3"
+};
+var _hoisted_5 = {
+  "class": "text-danger"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     onInput: _cache[0] || (_cache[0] = function () {
       return _ctx.onInputChange && _ctx.onInputChange.apply(_ctx, arguments);
     }),
-    value: _ctx.pdfFIle,
     "class": "form-control",
     type: "file",
     id: "file",
-    name: "PDF_FILE"
-  }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_3)]);
+    name: "PDF_FILE",
+    style: {
+      "display": "none"
+    }
+  }, null, 32 /* HYDRATE_EVENTS */), _hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.fileName), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.fieldErrors.fileName), 1 /* TEXT */)]);
 }
 
 /***/ }),
@@ -18163,16 +18248,25 @@ var _hoisted_1 = {
 var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "snippet-description",
   "class": "form-label"
-}, "Snippet description", -1 /* HOISTED */);
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Snippet description "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "text-danger"
+}, "*")], -1 /* HOISTED */);
 var _hoisted_3 = ["value"];
 var _hoisted_4 = {
+  "class": "text-danger"
+};
+var _hoisted_5 = {
   "class": "mb-3"
 };
-var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "snippet",
   "class": "form-label"
-}, "HTML Snippet", -1 /* HOISTED */);
-
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("HTML Snippet "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "text-danger"
+}, "*")], -1 /* HOISTED */);
+var _hoisted_7 = {
+  "class": "text-danger"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_vue_editor = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("vue-editor");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
@@ -18185,13 +18279,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     id: "snippet-description",
     rows: "3",
     placeholder: "Enter description here"
-  }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_3)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [_hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_vue_editor, {
+  }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_3), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.fieldErrors.snippetDescription), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [_hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_vue_editor, {
     id: "snippet",
     modelValue: $options.htmlSnippet,
     "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
       return $options.htmlSnippet = $event;
     })
-  }, null, 8 /* PROPS */, ["modelValue"])])], 64 /* STABLE_FRAGMENT */);
+  }, null, 8 /* PROPS */, ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.fieldErrors.htmlSnippet), 1 /* TEXT */)])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
@@ -18282,7 +18376,10 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     onInputChange: function onInputChange(evt) {
       var element = evt.target;
-      var value = element.name === "NEW_TAB" ? element.checked : element.value;
+      var value;
+      if (element.type === 'file') value = element.files[0];else {
+        value = element.name === "NEW_TAB" ? element.checked : element.value;
+      }
       this.$store.commit("UPDATE_".concat(element.name), value);
     }
   }
@@ -18304,60 +18401,67 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
 
 var state = {
-  title: '',
-  resourceType: 1,
-  snippetDescription: '',
-  htmlSnippet: '',
-  pdfFIle: '',
-  link: '',
-  openLinkInNewTab: true
+  fields: {
+    title: '',
+    resourceType: '',
+    snippetDescription: '',
+    htmlSnippet: '',
+    pdfFIle: '',
+    fileName: '',
+    link: '',
+    openLinkInNewTab: true
+  }
 };
 var mutations = {
   UPDATE_TITLE: function UPDATE_TITLE(state, payload) {
-    state.title = payload;
+    state.fields.title = payload;
   },
   UPDATE_RESOURCE_TYPE: function UPDATE_RESOURCE_TYPE(state, payload) {
-    state.resourceType = payload;
+    state.fields.resourceType = payload;
   },
   UPDATE_SNIPPET_DESCRIPTION: function UPDATE_SNIPPET_DESCRIPTION(state, payload) {
-    state.snippetDescription = payload;
+    state.fields.snippetDescription = payload;
   },
   UPDATE_SNIPPET: function UPDATE_SNIPPET(state, payload) {
-    state.htmlSnippet = payload;
+    state.fields.htmlSnippet = payload;
   },
   UPDATE_PDF_FILE: function UPDATE_PDF_FILE(state, payload) {
-    state.pdfFIle = payload;
+    if (!payload) return;
+    state.fields.pdfFIle = payload;
+    state.fields.fileName = payload.name;
   },
   UPDATE_LINK: function UPDATE_LINK(state, payload) {
-    state.link = payload;
+    state.fields.link = payload;
   },
   UPDATE_NEW_TAB: function UPDATE_NEW_TAB(state, payload) {
-    console.log(payload);
-    state.openLinkInNewTab = payload;
+    state.fields.openLinkInNewTab = payload;
   }
 };
 var actions = {};
 var getters = {
   title: function title(state) {
-    return state.title;
+    return state.fields.title;
   },
   resourceType: function resourceType(state) {
-    return state.resourceType;
+    return state.fields.resourceType;
   },
   snippetDescription: function snippetDescription(state) {
-    return state.snippetDescription;
+    return state.fields.snippetDescription;
   },
   htmlSnippet: function htmlSnippet(state) {
-    return state.htmlSnippet;
+    return state.fields.htmlSnippet;
   },
   pdfFIle: function pdfFIle(state) {
-    return state.pdfFIle;
+    return state.fields.pdfFIle;
+  },
+  fileName: function fileName(state) {
+    return state.fields.fileName;
   },
   link: function link(state) {
-    return state.link;
+    return state.fields.link;
   },
   openLinkInNewTab: function openLinkInNewTab(state) {
-    return state.openLinkInNewTab;
+    return state.fields.openLinkInNewTab;
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,vuex__WEBPACK_IMPORTED_MODULE_0__.createStore)({

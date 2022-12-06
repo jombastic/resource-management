@@ -1,12 +1,14 @@
 <template>
     <div class="mb-3">
-        <label for="snippet-description" class="form-label">Snippet description</label>
+        <label for="snippet-description" class="form-label">Snippet description <span class="text-danger">*</span></label>
         <textarea :value="snippetDescription" @input="onInputChange" name="SNIPPET_DESCRIPTION" class="form-control" id="snippet-description" rows="3"
             placeholder="Enter description here"></textarea>
+            <span class="text-danger">{{ fieldErrors.snippetDescription }}</span>
     </div>
     <div class="mb-3">
-        <label for="snippet" class="form-label">HTML Snippet</label>
+        <label for="snippet" class="form-label">HTML Snippet <span class="text-danger">*</span></label>
         <vue-editor id="snippet" v-model="htmlSnippet" />
+        <span class="text-danger">{{ fieldErrors.htmlSnippet }}</span>
     </div>
 </template>
 
@@ -21,6 +23,8 @@ export default {
     components: { VueEditor },
 
     mixins: [UpdateInput],
+
+    props: ['fieldErrors'],
 
     computed: {
         ...mapGetters(['snippetDescription']),

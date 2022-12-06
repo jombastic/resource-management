@@ -1,23 +1,26 @@
 <template>
-    <form action="" class="row">
+    <form @submit.prevent="submitForm" action="" class="row">
         <div class="col-6 mb-3">
             <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input :value="title" @input="onInputChange" type="text" class="form-control" id="title" name="TITLE" placeholder="Enter title here">
+                <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+                <input :value="title" @input="onInputChange" type="text" class="form-control" id="title" name="TITLE"
+                    placeholder="Enter title here">
+                    <span class="text-danger">{{ fieldErrors.title }}</span>
             </div>
             <div class="mb-5">
-                <label for="resource-type" class="form-label">Resource Type</label>
-                <select @change="onInputChange" :value="resourceType" name="RESOURCE_TYPE" id="resource-type" class="form-select"
-                    aria-label="Default select example">
+                <label for="resource-type" class="form-label">Resource Type <span class="text-danger">*</span></label>
+                <select @change="onInputChange" :value="resourceType" name="RESOURCE_TYPE" id="resource-type"
+                    class="form-select" aria-label="Default select example">
                     <option disabled value="">Select a resource type</option>
-                    <option value="1">PDF Download</option>
-                    <option value="2">HTML Snippet</option>
-                    <option value="3">Link</option>
+                    <option>PDF Download</option>
+                    <option>HTML Snippet</option>
+                    <option>Link</option>
                 </select>
+                <span class="text-danger">{{ fieldErrors.resourceType }}</span>
             </div>
-            <SnippetComponent  />
-            <PdfDownload  />
-            <LinkComponent  />
+            <SnippetComponent :fieldErrors="fieldErrors" v-if="resourceType === 'HTML Snippet'" />
+            <PdfDownload :fieldErrors="fieldErrors" v-if="resourceType === 'PDF Download'" />
+            <LinkComponent :fieldErrors="fieldErrors" v-if="resourceType === 'Link'" />
         </div>
         <div class="col-12">
             <button class="btn btn-primary" type="submit">Submit form</button>
@@ -46,5 +49,61 @@ export default {
     computed: {
         ...mapGetters(['title', 'resourceType'])
     },
+
+    data() {
+        return {
+            fieldErrors: {
+                title: undefined,
+                resourceType: undefined,
+                snippetDescription: undefined,
+                htmlSnippet: undefined,
+                pdfFIle: undefined,
+                link: undefined,
+            }
+        }
+    },
+
+    methods: {
+        validateForm(fields) {
+            const errors = {};
+            if (!fields.title) errors.title = 'Title required';
+            if (!fields.resourceType) errors.resourceType = 'Resource type required';
+
+            if (fields.resourceType === 'HTML Snippet') {
+                if (!fields.snippetDescription) errors.snippetDescription = 'Snippet description required';
+                if (!fields.htmlSnippet) errors.htmlSnippet = 'Html snippet required';
+            }
+
+            if (fields.resourceType === 'PDF Download') {
+                if (!fields.fileName) errors.fileName = 'File required';
+                // Allowing file type
+                var allowedExtensions = /(\.pdf)$/i;
+
+                if (fields.fileName && !allowedExtensions.exec(fields.fileName)) errors.fileName = 'Invalid file type';
+            }
+
+            if (fields.resourceType === 'Link') {
+                if (!fields.link) errors.link = 'Link required';
+                if (fields.link && !this.isValidUrl(fields.link)) errors.link = 'Invalid link';
+            }
+
+            return errors;
+        },
+
+        isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (err) {
+                return false;
+            }
+        },
+
+        submitForm(evt) {
+            this.fieldErrors = this.validateForm(this.$store.state.fields);
+
+            if (Object.keys(this.fieldErrors).length) return;
+        }
+    }
 }
 </script>
