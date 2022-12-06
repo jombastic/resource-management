@@ -16,6 +16,7 @@
 </head>
 
 <body class="antialiased">
+    @include('components.messages')
     @include('components.navigation')
 
     <main class="pt-5 pb-5">

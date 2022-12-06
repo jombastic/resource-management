@@ -9,7 +9,7 @@ export default {
             else {
                 value =
                     element.name === "NEW_TAB"
-                        ? element.checked
+                        ? element.checked ? 1 : null
                         : element.value;
             }
                     

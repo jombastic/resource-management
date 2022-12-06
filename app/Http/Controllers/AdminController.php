@@ -57,9 +57,12 @@ class AdminController extends Controller
         $validator->validate();
 
         $file = $request->file('pdfFile');
-        $data['pdfFile'] = $file->storeAs('public', $file->getClientOriginalName());
+        if ($file)
+            $data['pdfFile'] = $file->storeAs('public', $file->getClientOriginalName());
 
         $this->resourceRepository->storeResources($data);
+
+        $request->session()->flash('success', 'Resource was saved successfully!');
 
         return response()->json(array('success' => true), 200);
     }

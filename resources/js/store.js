@@ -42,8 +42,22 @@ const mutations = {
 const actions = {
     saveResources({ state, commit }) {
         const formData = new FormData();
-        for (const [key, value] of Object.entries(state.fields)) {
-            formData.append(key, value);
+        // for (const [key, value] of Object.entries(state.fields)) {
+        //     formData.append(key, value);
+        // }
+        formData.append('title', state.fields.title);
+        formData.append('resourceType', state.fields.resourceType);
+
+        if (state.fields.resourceType === 'HTML Snippet') {
+            formData.append('snippetDescription', state.fields.snippetDescription);
+            formData.append('htmlSnippet', state.fields.htmlSnippet);
+        }
+        if (state.fields.resourceType === 'PDF Download')
+            formData.append('pdfFile', state.fields.pdfFile);
+
+        if (state.fields.resourceType === 'Link') {
+            formData.append('link', state.fields.link);
+            formData.append('openLinkInNewTab', state.fields.openLinkInNewTab);
         }
 
         return axios.post('/admin/store', formData)
@@ -51,7 +65,7 @@ const actions = {
                 window.location.replace('/');
             })
             .catch((error) => {
-                throw error
+                throw error;
             })
     },
 };

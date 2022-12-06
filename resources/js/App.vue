@@ -108,7 +108,6 @@ export default {
             this.$store.dispatch('saveResources', this.$store.state.fields)
                 .then(() => {
                     this.saveStatus = 'SUCCESS';
-                    console.log('sho')
                 })
                 .catch((err) => {
                     this.saveStatus = 'ERROR';

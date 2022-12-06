@@ -20,3 +20,10 @@ main {
 footer {
     flex-shrink: 0;
 }
+
+.notices {
+    bottom: 0;
+    position: fixed;
+    right: 0;
+    z-index: 9999;
+}
