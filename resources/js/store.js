@@ -67,7 +67,7 @@ const actions = {
             })
     },
 
-    editResource({ state, getters }) {
+    editResource({ state }) {
         const formData = new FormData();
         formData.append('id', state.fields.id);
         formData.append('title', state.fields.title);
@@ -95,6 +95,16 @@ const actions = {
                 throw error;
             })
     },
+
+    deleteResource({ state }) {
+        return axios.post('/admin/delete/' + state.fields.id)
+            .then((response) => {
+                window.location.replace('/');
+            })
+            .catch((error) => {
+                throw error;
+            })
+    }
 };
 
 const getters = {

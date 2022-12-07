@@ -37,4 +37,9 @@ class ResourceRepository
             return Resource::where('id', $data['id'])->update($data);
         });
     }
+
+    public function deleteResource($id)
+    {
+        return Resource::where('id', $id)->delete();
+    }
 }

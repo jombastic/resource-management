@@ -119,9 +119,13 @@ class AdminController extends Controller
      * @param  \App\Models\Resource  $resource
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Resource $resource)
+    public function destroy($id, Request $request)
     {
-        //
+        $this->resourceRepository->deleteResource($id);
+
+        $request->session()->flash('success', 'Resource was deleted successfully!');
+
+        return response()->json(array('success' => true), 200);
     }
 
     private function store_file($file)

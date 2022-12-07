@@ -17931,6 +17931,9 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         }
         _this.fieldErrors = fieldErrors;
       });
+    },
+    deleteResource: function deleteResource() {
+      this.$store.dispatch('deleteResource');
     }
   }
 });
@@ -18092,19 +18095,20 @@ var _hoisted_13 = [_hoisted_9, _hoisted_10, _hoisted_11, _hoisted_12];
 var _hoisted_14 = {
   "class": "text-danger"
 };
-var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_15 = {
   "class": "col-12"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+};
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
   "class": "btn btn-primary",
   type: "submit"
-}, "Submit form")], -1 /* HOISTED */);
+}, "Submit form", -1 /* HOISTED */);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_SnippetComponent = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("SnippetComponent");
   var _component_PdfDownload = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("PdfDownload");
   var _component_LinkComponent = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("LinkComponent");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("form", {
-    onSubmit: _cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+    onSubmit: _cache[3] || (_cache[3] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
       return $options.submitForm && $options.submitForm.apply($options, arguments);
     }, ["prevent"])),
     action: "",
@@ -18137,7 +18141,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 8 /* PROPS */, ["fieldErrors"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.resourceType === 'Link' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_LinkComponent, {
     key: 2,
     fieldErrors: $data.fieldErrors
-  }, null, 8 /* PROPS */, ["fieldErrors"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_15], 32 /* HYDRATE_EVENTS */);
+  }, null, 8 /* PROPS */, ["fieldErrors"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [_hoisted_16, _ctx.id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 0,
+    "class": "btn btn-danger ms-2",
+    onClick: _cache[2] || (_cache[2] = function () {
+      return $options.deleteResource && $options.deleteResource.apply($options, arguments);
+    }),
+    type: "button"
+  }, "Delete resource")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 32 /* HYDRATE_EVENTS */);
 }
 
 /***/ }),
@@ -18484,8 +18495,7 @@ var actions = {
     });
   },
   editResource: function editResource(_ref2) {
-    var state = _ref2.state,
-      getters = _ref2.getters;
+    var state = _ref2.state;
     var formData = new FormData();
     formData.append('id', state.fields.id);
     formData.append('title', state.fields.title);
@@ -18503,6 +18513,14 @@ var actions = {
       formData.append('openLinkInNewTab', state.fields.openLinkInNewTab);
     }
     return axios.post('/admin/update/' + state.fields.id, formData).then(function (response) {
+      window.location.replace('/');
+    })["catch"](function (error) {
+      throw error;
+    });
+  },
+  deleteResource: function deleteResource(_ref3) {
+    var state = _ref3.state;
+    return axios.post('/admin/delete/' + state.fields.id).then(function (response) {
       window.location.replace('/');
     })["catch"](function (error) {
       throw error;

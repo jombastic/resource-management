@@ -24,6 +24,7 @@
         </div>
         <div class="col-12">
             <button class="btn btn-primary" type="submit">Submit form</button>
+            <button v-if="id" class="btn btn-danger ms-2" @click="deleteResource" type="button">Delete resource</button>
         </div>
     </form>
 </template>
@@ -119,6 +120,10 @@ export default {
                     }
                     this.fieldErrors = fieldErrors;
                 });
+        },
+
+        deleteResource() {
+            this.$store.dispatch('deleteResource')
         }
     }
 }
