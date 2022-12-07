@@ -14,6 +14,11 @@ class ResourceRepository
         $this->data_types = ['title', 'resourceType', 'pdfFile', 'url', 'snippetDescription', 'openLinkInNewTab', 'htmlSnippet'];
     }
 
+    public function getRespositories()
+    {
+        return Resource::paginate(5);
+    }
+
     public function storeResources($data)
     {
         return Resource::create($data);

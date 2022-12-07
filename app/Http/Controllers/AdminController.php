@@ -22,7 +22,8 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view('homepage');
+        $resources = $this->resourceRepository->getRespositories();
+        return view('homepage', compact('resources'));
     }
 
     /**
@@ -56,7 +57,7 @@ class AdminController extends Controller
         $validator = Validator::make($data, $rules);
         $validator->validate();
 
-        $this->store_file($request->file('pdfFile'));
+        $data['pdfFile'] = $this->store_file($request->file('pdfFile'));
         $this->resourceRepository->storeResources($data);
 
         $request->session()->flash('success', 'Resource was saved successfully!');
@@ -104,7 +105,9 @@ class AdminController extends Controller
         $validator = Validator::make($data, $rules);
         $validator->validate();
 
-        $this->store_file($request->file('pdfFile'));
+        $data['pdfFile'] = $this->store_file($request->file('pdfFile'));
+        if (!$data['pdfFile']) $data['pdfFile'] = $data['fileName'];
+        unset($data['fileName']);
 
         $this->resourceRepository->editResource($data);
 
@@ -130,10 +133,12 @@ class AdminController extends Controller
 
     private function store_file($file)
     {
+        $filename = '';
+
         if ($file) {
             $filename = $file->getClientOriginalName();
             $file->storeAs('public', $filename);
-            $data['pdfFile'] = $filename;
         }
+        return $filename;
     }
 }
