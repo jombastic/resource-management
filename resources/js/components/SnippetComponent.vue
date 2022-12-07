@@ -31,7 +31,7 @@ export default {
 
         htmlSnippet: {
             get() {
-                return this.$store.state.htmlSnippet;
+                return this.$store.getters.htmlSnippet;
             },
             set(val) {
                 this.$store.commit('UPDATE_SNIPPET', val);

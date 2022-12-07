@@ -2,15 +2,16 @@ import { createStore } from 'vuex';
 
 const state = {
     fields: {
-        title: '',
-        resourceType: '',
-        snippetDescription: '',
-        htmlSnippet: '',
+        id: window.resource.id ? window.resource.id : '',
+        title: window.resource.title ? window.resource.title : '',
+        resourceType: window.resource.resourceType ? window.resource.resourceType : '',
+        snippetDescription: window.resource.snippetDescription ? window.resource.snippetDescription : '',
+        htmlSnippet: window.resource.htmlSnippet ? window.resource.htmlSnippet : '',
         pdfFile: '',
-        fileName: '',
-        link: '',
-        openLinkInNewTab: ''
-    }
+        fileName: window.resource.pdfFile ? window.resource.pdfFile : '',
+        url: window.resource.url ? window.resource.url : '',
+        openLinkInNewTab: window.resource.openLinkInNewTab ? window.resource.openLinkInNewTab : 0
+    },
 };
 
 const mutations = {
@@ -31,8 +32,8 @@ const mutations = {
         state.fields.pdfFile = payload;
         state.fields.fileName = payload.name;
     },
-    UPDATE_LINK(state, payload) {
-        state.fields.link = payload;
+    UPDATE_URL(state, payload) {
+        state.fields.url = payload;
     },
     UPDATE_NEW_TAB(state, payload) {
         state.fields.openLinkInNewTab = payload;
@@ -40,11 +41,8 @@ const mutations = {
 };
 
 const actions = {
-    saveResources({ state, commit }) {
+    saveResources({ state, getters }) {
         const formData = new FormData();
-        // for (const [key, value] of Object.entries(state.fields)) {
-        //     formData.append(key, value);
-        // }
         formData.append('title', state.fields.title);
         formData.append('resourceType', state.fields.resourceType);
 
@@ -56,7 +54,7 @@ const actions = {
             formData.append('pdfFile', state.fields.pdfFile);
 
         if (state.fields.resourceType === 'Link') {
-            formData.append('link', state.fields.link);
+            formData.append('url', state.fields.url);
             formData.append('openLinkInNewTab', state.fields.openLinkInNewTab);
         }
 
@@ -68,16 +66,46 @@ const actions = {
                 throw error;
             })
     },
+
+    editResource({ state, getters }) {
+        const formData = new FormData();
+        formData.append('id', state.fields.id);
+        formData.append('title', state.fields.title);
+        formData.append('resourceType', state.fields.resourceType);
+
+        if (state.fields.resourceType === 'HTML Snippet') {
+            formData.append('snippetDescription', state.fields.snippetDescription);
+            formData.append('htmlSnippet', state.fields.htmlSnippet);
+        }
+        if (state.fields.resourceType === 'PDF Download') {
+            formData.append('pdfFile', state.fields.pdfFile);
+            formData.append('fileName', state.fields.fileName);
+        }
+
+        if (state.fields.resourceType === 'Link') {
+            formData.append('url', state.fields.url);
+            formData.append('openLinkInNewTab', state.fields.openLinkInNewTab);
+        }
+
+        return axios.post('/admin/update/' + state.fields.id, formData)
+            .then((response) => {
+                window.location.replace('/');
+            })
+            .catch((error) => {
+                throw error;
+            })
+    },
 };
 
 const getters = {
+    id: state => state.fields.id,
     title: state => state.fields.title,
     resourceType: state => state.fields.resourceType,
     snippetDescription: state => state.fields.snippetDescription,
     htmlSnippet: state => state.fields.htmlSnippet,
     pdfFile: state => state.fields.pdfFile,
     fileName: state => state.fields.fileName,
-    link: state => state.fields.link,
+    url: state => state.fields.url,
     openLinkInNewTab: state => state.fields.openLinkInNewTab,
 };
 

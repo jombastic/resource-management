@@ -47,7 +47,7 @@ export default {
     mixins: [UpdateInput],
 
     computed: {
-        ...mapGetters(['title', 'resourceType'])
+        ...mapGetters(['id', 'title', 'resourceType'])
     },
 
     data() {
@@ -58,7 +58,7 @@ export default {
                 snippetDescription: undefined,
                 htmlSnippet: undefined,
                 pdfFIle: undefined,
-                link: undefined,
+                url: undefined,
             }
         }
     },
@@ -83,8 +83,8 @@ export default {
             }
 
             if (fields.resourceType === 'Link') {
-                if (!fields.link) errors.link = 'Link required';
-                if (fields.link && !this.isValidUrl(fields.link)) errors.link = 'Invalid link';
+                if (!fields.url) errors.url = 'Link required';
+                if (fields.url && !this.isValidUrl(fields.url)) errors.url = 'Invalid link';
             }
 
             return errors;
@@ -105,7 +105,8 @@ export default {
             if (Object.keys(this.fieldErrors).length) return;
 
             this.saveStatus = 'SAVING';
-            this.$store.dispatch('saveResources', this.$store.state.fields)
+            let action = !this.id ? 'saveResources' : 'editResource';
+            this.$store.dispatch(action, this.$store.state.fields)
                 .then(() => {
                     this.saveStatus = 'SUCCESS';
                 })

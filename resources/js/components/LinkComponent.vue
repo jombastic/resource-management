@@ -1,12 +1,12 @@
 <template>
     <div class="mb-3">
         <label for="link" class="form-label">Link <span class="text-danger">*</span></label>
-        <input @input="onInputChange" :value="link" type="text" name="LINK" class="form-control" id="link"
+        <input @input="onInputChange" :value="url" type="text" name="URL" class="form-control" id="link"
             placeholder="Enter a link here">
-        <span class="text-danger">{{ fieldErrors.link }}</span>
+        <span class="text-danger">{{ fieldErrors.url }}</span>
     </div>
     <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="1" :checked="openLinkInNewTab" @change="onInputChange"
+        <input class="form-check-input" type="checkbox" :checked="openLinkInNewTab" @change="onInputChange"
             name="NEW_TAB" id="new-tab">
         <label class="form-check-label" for="new-tab">
             Open the link in a new tab</label>
@@ -25,7 +25,7 @@ export default {
     props: ['fieldErrors'],
 
     computed: {
-        ...mapGetters(['link', 'openLinkInNewTab'])
+        ...mapGetters(['url', 'openLinkInNewTab'])
     }
 }
 </script>

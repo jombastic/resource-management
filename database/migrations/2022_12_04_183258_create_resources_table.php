@@ -15,12 +15,13 @@ return new class extends Migration
     {
         Schema::create('resources', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('pdfFile')->nullable();
-            $table->string('link')->nullable();
-            $table->string('snippetDescription')->nullable();
-            $table->tinyInteger('openLinkInNewTab')->nullable();
-            $table->longText('htmlSnippet')->nullable();
+            $table->string('title')->nullable()->default(NULL);
+            $table->string('resourceType')->nullable()->default(NULL);
+            $table->string('pdfFile')->nullable()->default(NULL);
+            $table->string('url')->nullable()->default(NULL);
+            $table->string('snippetDescription')->nullable()->default(NULL);
+            $table->tinyInteger('openLinkInNewTab')->nullable()->default(NULL);
+            $table->longText('htmlSnippet')->nullable()->default(NULL);
             $table->timestamps();
         });
     }

@@ -17869,7 +17869,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     PdfDownload: _components_PdfDownload_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   mixins: [_mixins_updateInput_js__WEBPACK_IMPORTED_MODULE_0__["default"]],
-  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapGetters)(['title', 'resourceType'])),
+  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapGetters)(['id', 'title', 'resourceType'])),
   data: function data() {
     return {
       fieldErrors: {
@@ -17878,7 +17878,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         snippetDescription: undefined,
         htmlSnippet: undefined,
         pdfFIle: undefined,
-        link: undefined
+        url: undefined
       }
     };
   },
@@ -17899,8 +17899,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         if (fields.fileName && !allowedExtensions.exec(fields.fileName)) errors.fileName = 'Invalid file type';
       }
       if (fields.resourceType === 'Link') {
-        if (!fields.link) errors.link = 'Link required';
-        if (fields.link && !this.isValidUrl(fields.link)) errors.link = 'Invalid link';
+        if (!fields.url) errors.url = 'Link required';
+        if (fields.url && !this.isValidUrl(fields.url)) errors.url = 'Invalid link';
       }
       return errors;
     },
@@ -17917,7 +17917,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.fieldErrors = this.validateForm(this.$store.state.fields);
       if (Object.keys(this.fieldErrors).length) return;
       this.saveStatus = 'SAVING';
-      this.$store.dispatch('saveResources', this.$store.state.fields).then(function () {
+      var action = !this.id ? 'saveResources' : 'editResource';
+      this.$store.dispatch(action, this.$store.state.fields).then(function () {
         _this.saveStatus = 'SUCCESS';
       })["catch"](function (err) {
         _this.saveStatus = 'ERROR';
@@ -17961,7 +17962,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
   name: 'LinkComponent',
   mixins: [_mixins_updateInput_js__WEBPACK_IMPORTED_MODULE_0__["default"]],
   props: ['fieldErrors'],
-  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapGetters)(['link', 'openLinkInNewTab']))
+  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapGetters)(['url', 'openLinkInNewTab']))
 });
 
 /***/ }),
@@ -18030,7 +18031,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
   computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_2__.mapGetters)(['snippetDescription'])), {}, {
     htmlSnippet: {
       get: function get() {
-        return this.$store.state.htmlSnippet;
+        return this.$store.getters.htmlSnippet;
       },
       set: function set(val) {
         this.$store.commit('UPDATE_SNIPPET', val);
@@ -18181,16 +18182,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onInput: _cache[0] || (_cache[0] = function () {
       return _ctx.onInputChange && _ctx.onInputChange.apply(_ctx, arguments);
     }),
-    value: _ctx.link,
+    value: _ctx.url,
     type: "text",
-    name: "LINK",
+    name: "URL",
     "class": "form-control",
     id: "link",
     placeholder: "Enter a link here"
-  }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_3), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.fieldErrors.link), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_3), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.fieldErrors.url), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "class": "form-check-input",
     type: "checkbox",
-    value: "1",
     checked: _ctx.openLinkInNewTab,
     onChange: _cache[1] || (_cache[1] = function () {
       return _ctx.onInputChange && _ctx.onInputChange.apply(_ctx, arguments);
@@ -18401,7 +18401,7 @@ __webpack_require__.r(__webpack_exports__);
       var element = evt.target;
       var value;
       if (element.type === 'file') value = element.files[0];else {
-        value = element.name === "NEW_TAB" ? element.checked ? 1 : null : element.value;
+        value = element.name === "NEW_TAB" ? element.checked ? 1 : 0 : element.value;
       }
       this.$store.commit("UPDATE_".concat(element.name), value);
     }
@@ -18425,14 +18425,15 @@ __webpack_require__.r(__webpack_exports__);
 
 var state = {
   fields: {
-    title: '',
-    resourceType: '',
-    snippetDescription: '',
-    htmlSnippet: '',
+    id: window.resource.id ? window.resource.id : '',
+    title: window.resource.title ? window.resource.title : '',
+    resourceType: window.resource.resourceType ? window.resource.resourceType : '',
+    snippetDescription: window.resource.snippetDescription ? window.resource.snippetDescription : '',
+    htmlSnippet: window.resource.htmlSnippet ? window.resource.htmlSnippet : '',
     pdfFile: '',
-    fileName: '',
-    link: '',
-    openLinkInNewTab: ''
+    fileName: window.resource.pdfFile ? window.resource.pdfFile : '',
+    url: window.resource.url ? window.resource.url : '',
+    openLinkInNewTab: window.resource.openLinkInNewTab ? window.resource.openLinkInNewTab : 0
   }
 };
 var mutations = {
@@ -18453,8 +18454,8 @@ var mutations = {
     state.fields.pdfFile = payload;
     state.fields.fileName = payload.name;
   },
-  UPDATE_LINK: function UPDATE_LINK(state, payload) {
-    state.fields.link = payload;
+  UPDATE_URL: function UPDATE_URL(state, payload) {
+    state.fields.url = payload;
   },
   UPDATE_NEW_TAB: function UPDATE_NEW_TAB(state, payload) {
     state.fields.openLinkInNewTab = payload;
@@ -18463,11 +18464,8 @@ var mutations = {
 var actions = {
   saveResources: function saveResources(_ref) {
     var state = _ref.state,
-      commit = _ref.commit;
+      getters = _ref.getters;
     var formData = new FormData();
-    // for (const [key, value] of Object.entries(state.fields)) {
-    //     formData.append(key, value);
-    // }
     formData.append('title', state.fields.title);
     formData.append('resourceType', state.fields.resourceType);
     if (state.fields.resourceType === 'HTML Snippet') {
@@ -18476,7 +18474,7 @@ var actions = {
     }
     if (state.fields.resourceType === 'PDF Download') formData.append('pdfFile', state.fields.pdfFile);
     if (state.fields.resourceType === 'Link') {
-      formData.append('link', state.fields.link);
+      formData.append('url', state.fields.url);
       formData.append('openLinkInNewTab', state.fields.openLinkInNewTab);
     }
     return axios.post('/admin/store', formData).then(function (response) {
@@ -18484,9 +18482,37 @@ var actions = {
     })["catch"](function (error) {
       throw error;
     });
+  },
+  editResource: function editResource(_ref2) {
+    var state = _ref2.state,
+      getters = _ref2.getters;
+    var formData = new FormData();
+    formData.append('id', state.fields.id);
+    formData.append('title', state.fields.title);
+    formData.append('resourceType', state.fields.resourceType);
+    if (state.fields.resourceType === 'HTML Snippet') {
+      formData.append('snippetDescription', state.fields.snippetDescription);
+      formData.append('htmlSnippet', state.fields.htmlSnippet);
+    }
+    if (state.fields.resourceType === 'PDF Download') {
+      formData.append('pdfFile', state.fields.pdfFile);
+      formData.append('fileName', state.fields.fileName);
+    }
+    if (state.fields.resourceType === 'Link') {
+      formData.append('url', state.fields.url);
+      formData.append('openLinkInNewTab', state.fields.openLinkInNewTab);
+    }
+    return axios.post('/admin/update/' + state.fields.id, formData).then(function (response) {
+      window.location.replace('/');
+    })["catch"](function (error) {
+      throw error;
+    });
   }
 };
 var getters = {
+  id: function id(state) {
+    return state.fields.id;
+  },
   title: function title(state) {
     return state.fields.title;
   },
@@ -18505,8 +18531,8 @@ var getters = {
   fileName: function fileName(state) {
     return state.fields.fileName;
   },
-  link: function link(state) {
-    return state.fields.link;
+  url: function url(state) {
+    return state.fields.url;
   },
   openLinkInNewTab: function openLinkInNewTab(state) {
     return state.fields.openLinkInNewTab;

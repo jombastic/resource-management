@@ -9,5 +9,5 @@ class Resource extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'pdfFile', 'link', 'snippetDescription', 'openLinkInNewTab', 'htmlSnippet'];
+    protected $fillable = ['title', 'resourceType', 'pdfFile', 'url', 'snippetDescription', 'openLinkInNewTab', 'htmlSnippet'];
 }
